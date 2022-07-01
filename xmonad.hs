@@ -7,19 +7,22 @@
 -- Normally, you'd only override those defaults you care about.
 --
 
-import XMonad
 import Data.Monoid
 import System.Exit
+import XMonad
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.EwmhDesktops
+import XMonad.Config.Xfce
+import XMonad.Config.Desktop
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
-myTerminal      = "lxterminal"
+myTerminal      = "xfce4-terminal"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -65,10 +68,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
 
     -- launch dmenu
-    , ((modm,               xK_p     ), spawn "dmenu_run")
+    , ((modm,               xK_p     ), spawn "rofi -show drun")
 
     -- launch gmrun
-    , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
+    , ((modm .|. shiftMask, xK_p     ), spawn "dmenu_run")
 
     -- close focused window
     , ((modm .|. shiftMask, xK_c     ), kill)
@@ -215,8 +218,12 @@ myLayout = avoidStruts (tiled ||| Mirror tiled ||| Full)
 myManageHook = composeAll
     [ className =? "MPlayer"        --> doFloat
     , className =? "Gimp"           --> doFloat
+    , className =? "Xfce4-appfinder"        --> doFloat
+    , className =? "Xfdesktop"        --> doIgnore
+    , className =? "Xfce4-popup-whiskermenu"        --> doIgnore
+    , className =? "Xmessage"        --> doFloat
     , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore ]
+    , resource  =? "kdesktop"       --> doIgnore ] 
 
 ------------------------------------------------------------------------
 -- Event handling
@@ -227,7 +234,7 @@ myManageHook = composeAll
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = mempty
+myEventHook = ewmhDesktopsEventHook
 
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -246,17 +253,13 @@ myLogHook = return ()
 --
 -- By default, do nothing.
 myStartupHook = do
-		spawnOnce "nitrogen --restore &"
-		spawnOnce "picom -f &"
-		spawnOnce "conky &"
+    spawnOnce "sh ~/.xmonad/autostart.sh"
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
 
 -- Run xmonad with the settings you specify. No need to modify this.
 --
-main = do
-	xmproc <-spawnPipe "xmobar /home/doc10/.config/xmobar/xmobarrc"
-	xmonad $ docks defaults
+main = xmonad $  ewmh  $ docks defaults
 
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will
