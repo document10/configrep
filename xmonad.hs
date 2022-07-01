@@ -253,7 +253,7 @@ myLogHook = return ()
 --
 -- By default, do nothing.
 myStartupHook = do
-    spawnOnce "sh ~/.xmonad/autostart.sh"
+    spawnOnce "sh ~/.xmonad/xmonad_autostart.sh"
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
 
