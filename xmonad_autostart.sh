@@ -1,4 +1,3 @@
-#rename to "autostart.sh"
 xmonad --recompile
 xmonad --restart
 picom -f &
