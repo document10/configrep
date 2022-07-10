@@ -1,12 +1,3 @@
---
--- xmonad example config file.
---
--- A template showing all available configuration hooks,
--- and how to override the defaults in your own xmonad.hs conf file.
---
--- Normally, you'd only override those defaults you care about.
---
-
 import Data.Monoid
 import System.Exit
 import XMonad
@@ -71,7 +62,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_p     ), spawn "rofi -show drun")
 
     -- launch gmrun
-    , ((modm .|. shiftMask, xK_p     ), spawn "dmenu_run")
+    , ((modm .|. shiftMask, xK_p     ), spawn "rofi -show combi")
 
     -- close focused window
     , ((modm .|. shiftMask, xK_c     ), kill)
@@ -234,7 +225,7 @@ myManageHook = composeAll
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = ewmhDesktopsEventHook
+myEventHook = mempty
 
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -296,8 +287,8 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "",
     "-- launching and killing programs",
     "mod-Shift-Enter  Launch xterminal",
-    "mod-p            Launch dmenu",
-    "mod-Shift-p      Launch gmrun",
+    "mod-p            Launch rofi in drun mode",
+    "mod-Shift-p      Launch rofi in combi mode",
     "mod-Shift-c      Close/kill the focused window",
     "mod-Space        Rotate through the available layout algorithms",
     "mod-Shift-Space  Reset the layouts on the current workSpace to default",
